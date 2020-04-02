@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find webots_ros)/maps/map.yaml">
+    <param name="frame_id" value="map"/>
+  </node>
+
+ 
+  <arg name="use_map_topic"   default="true"/>
+  <arg name="scan_topic"      default="pioneer3at/Sick_LMS_291/laser_scan/layer0"/> 
+  <arg name="base_frame_id"   default="base_link"/>
+  <arg name="global_frame_id" default="map"/>  
+
+<!--    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find auto_kmz)/rviz/mobile_rbt.rviz" />
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+    <param name="use_dijkstra" value="false" /> 
+    <param name="planner_frequency" value="1.0" />
+    <param name="planner_patience"  value="5.0" />
+
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    <param name="controller_frequency" value="10.0" />
+    <param name="controller_patience" value="5.0" />
+    
+    <rosparam file="$(find auto_kmz)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find auto_kmz)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find auto_kmz)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find auto_kmz)/config/global_costmap_params.yaml" command="load" /> 
+    <rosparam file="$(find auto_kmz)/config/base_local_planner_params.yaml" command="load" />
+    LOAD COSTMAP_CONVERTER PARAMETERS HERE 
+    <rosparam file="$(find auto_kmz)/config/costmap_conversion_params.yaml" command="load" />
+  </node> 
+-->
+
+</launch>
+

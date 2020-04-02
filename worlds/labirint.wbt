@@ -1,0 +1,163 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.24289680267304334 0.9382683453170777 0.2462796285265299 1.6171131301713038
+  position 28.837628414203937 17.400407617215883 -0.9710297193703428
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+  size 15 15
+  appearance PBRAppearance {
+    baseColor 0.0591135 0.292439 0.31667
+    roughness 1
+    metalness 0
+  }
+}
+Solid {
+  translation 0 0.5 7.5
+  children [
+    DEF WALL_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 0
+        metalness 0
+      }
+      geometry Box {
+        size 15 1 0.1
+      }
+    }
+  ]
+  name "wall"
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation 0 0.5 -7.5
+  children [
+    USE WALL_SHAPE
+  ]
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation 7.5 0.5 0
+  rotation 0 1 0 1.5708
+  children [
+    USE WALL_SHAPE
+  ]
+  name "solid(1)"
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation -7.5 0.5 0
+  rotation 0 1 0 1.5708
+  children [
+    USE WALL_SHAPE
+  ]
+  name "solid(2)"
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation -2.5 0.5 5
+  children [
+    DEF SHAPE_SMALLER_WALL Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 0
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 10 1 0.1
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject USE SHAPE_SMALLER_WALL
+}
+Solid {
+  translation 2.5 0.5 3
+  children [
+    USE SHAPE_SMALLER_WALL
+  ]
+  name "solid(4)"
+  boundingObject USE SHAPE_SMALLER_WALL
+}
+Solid {
+  translation 2.5 0.5 -5
+  children [
+    USE SHAPE_SMALLER_WALL
+  ]
+  name "solid(5)"
+  boundingObject USE SHAPE_SMALLER_WALL
+}
+Solid {
+  translation -2.5 0.5 -3
+  children [
+    USE SHAPE_SMALLER_WALL
+  ]
+  name "solid(6)"
+  boundingObject USE SHAPE_SMALLER_WALL
+}
+Solid {
+  translation -2.5 0.5 1
+  rotation 0 1 0 1.5708
+  children [
+    DEF WALL_SMALLEST_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 0
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 4 1 0.1
+      }
+    }
+  ]
+  name "solid(7)"
+  boundingObject USE WALL_SMALLEST_SHAPE
+}
+Solid {
+  translation 2.5 0.5 -1
+  rotation 0 1 0 1.5708
+  children [
+    USE WALL_SMALLEST_SHAPE
+  ]
+  name "solid(8)"
+}
+DEF PIONEER_3AT Pioneer3at {
+  translation 0 0.107612 0
+  rotation 0.9999999511714693 3.1422863011975066e-05 0.00031091745319006465 -0.0007749737894805407
+  controller "ros"
+  controllerArgs "--name=pioneer3at"
+  extensionSlot [
+    Camera {
+      translation 0 0.17 -0.22
+      width 256
+      height 128
+      motionBlur 500
+      noise 0.02
+    }
+    Accelerometer {
+      lookupTable [
+        -39.24 -39.24 0.005
+        39.24 39.24 0.005
+      ]
+    }
+    Gyro {
+      lookupTable [
+        -50 -50 0.005
+        50 50 0.005
+      ]
+    }
+    SickLms291 {
+      translation 0 0.23 -0.136
+      noise 0.1
+    }
+    GPS {
+    }
+    InertialUnit {
+    }
+  ]
+}
