@@ -67,12 +67,12 @@ double gaussian(double x, double mu, double sigma) {
 void updateSpeed() {
   // init dynamic variables
   
-//  double leftObstacle = 0.0, rightObstacle = 0.0, obstacle = 0.0;
+  double leftObstacle = 0.0, rightObstacle = 0.0, obstacle = 0.0;
   double speeds[NMOTORS];
   // apply the braitenberg coefficients on the resulted values of the lms291
   // near obstacle sensed on the left side
 
-/*
+
   for (int i = 0; i < halfResolution; ++i) {
     if (lidarValues[i] < rangeThreshold)  // far obstacles are ignored
       leftObstacle += braitenbergCoefficients[i] * (1.0 - lidarValues[i] / maxRange);
@@ -98,7 +98,7 @@ void updateSpeed() {
     speeds[3] = MAX_SPEED;
   }
 
-*/
+
   // set speeds
 
   speeds[0] = MAX_SPEED;
@@ -177,7 +177,7 @@ void quit(int sig) {
   exit(0);
 }
 
-/*
+
 void setVelCallback(const geometry_msgs::Twist::ConstPtr &twist) {
   double speeds[NMOTORS];    
   speeds[0] = 0.0;
@@ -196,7 +196,7 @@ void setVelCallback(const geometry_msgs::Twist::ConstPtr &twist) {
 
 
 }
-*/
+
 
 
 

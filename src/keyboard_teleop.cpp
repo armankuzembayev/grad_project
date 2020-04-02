@@ -14,12 +14,12 @@
 
 #include "ros/ros.h"
 
-#include <webots_ros/Int32Stamped.h>
+#include <grad_project/Int32Stamped.h>
 
-#include <webots_ros/set_float.h>
-#include <webots_ros/set_int.h>
+#include <grad_project/set_float.h>
+#include <grad_project/set_int.h>
 
-#include <webots_ros/robot_get_device_list.h>
+#include <grad_project/robot_get_device_list.h>
 
 #include <std_msgs/String.h>
 
@@ -35,16 +35,18 @@ static double lposition = 0;
 static double rposition = 0;
 
 ros::ServiceClient leftWheelClient;
-webots_ros::set_float leftWheelSrv;
+ros::ServiceClient leftWheelClient2;
+grad_project::set_float leftWheelSrv;
 
 ros::ServiceClient rightWheelClient;
-webots_ros::set_float rightWheelSrv;
+ros::ServiceClient rightWheelClient2;
+grad_project::set_float rightWheelSrv;
 
 ros::ServiceClient timeStepClient;
-webots_ros::set_int timeStepSrv;
+grad_project::set_int timeStepSrv;
 
 ros::ServiceClient enableKeyboardClient;
-webots_ros::set_int enableKeyboardSrv;
+grad_project::set_int enableKeyboardSrv;
 
 // catch names of the controllers availables on ROS network
 void controllerNameCallback(const std_msgs::String::ConstPtr &name) {
@@ -63,29 +65,29 @@ void quit(int sig) {
   exit(0);
 }
 
-void keyboardCallback(const webots_ros::Int32Stamped::ConstPtr &value) {
+void keyboardCallback(const grad_project::Int32Stamped::ConstPtr &value) {
   int key = value->data;
   int send = 0;
 
   switch (key) {
     case 314:
-      lposition += -0.2;
-      rposition += 0.2;
+      lposition = -6;
+      rposition = 6;
       send = 1;
       break;
     case 316:
-      lposition += 0.2;
-      rposition += -0.2;
+      lposition = 6;
+      rposition = -6;
       send = 1;
       break;
     case 315:
-      lposition += 0.2;
-      rposition += 0.2;
+      lposition = 6;
+      rposition = 6;
       send = 1;
       break;
     case 317:
-      lposition += -0.2;
-      rposition += -0.2;
+      lposition = -6;
+      rposition = -6;
       send = 1;
       break;
     case 312:
@@ -100,7 +102,7 @@ void keyboardCallback(const webots_ros::Int32Stamped::ConstPtr &value) {
   leftWheelSrv.request.value = lposition;
   rightWheelSrv.request.value = rposition;
   if (send) {
-    if (!leftWheelClient.call(leftWheelSrv) || !rightWheelClient.call(rightWheelSrv) || !leftWheelSrv.response.success ||
+    if (!leftWheelClient.call(leftWheelSrv) || !leftWheelClient2.call(leftWheelSrv) || !rightWheelClient.call(rightWheelSrv) || !rightWheelClient2.call(rightWheelSrv) || !leftWheelSrv.response.success ||
         !rightWheelSrv.response.success)
       ROS_ERROR("Failed to send new position commands to the robot.");
   }
@@ -139,13 +141,16 @@ int main(int argc, char **argv) {
   }
   // leave topic once it's not necessary anymore
   nameSub.shutdown();
+std::cout << controllerName + "/left_wheel/set_position\n";
+  leftWheelClient = n.serviceClient<grad_project::set_float>(controllerName + "/front_left_wheel/set_velocity");
+  rightWheelClient = n.serviceClient<grad_project::set_float>(controllerName + "/front_right_wheel/set_velocity");
+    leftWheelClient2 = n.serviceClient<grad_project::set_float>(controllerName + "/back_left_wheel/set_velocity");
+  rightWheelClient2 = n.serviceClient<grad_project::set_float>(controllerName + "/back_right_wheel/set_velocity");
 
-  leftWheelClient = n.serviceClient<webots_ros::set_float>(controllerName + "/left_wheel/set_position");
-  rightWheelClient = n.serviceClient<webots_ros::set_float>(controllerName + "/right_wheel/set_position");
-  timeStepClient = n.serviceClient<webots_ros::set_int>(controllerName + "/robot/time_step");
+  timeStepClient = n.serviceClient<grad_project::set_int>(controllerName + "/robot/time_step");
   timeStepSrv.request.value = TIME_STEP;
 
-  enableKeyboardClient = n.serviceClient<webots_ros::set_int>(controllerName + "/keyboard/enable");
+  enableKeyboardClient = n.serviceClient<grad_project::set_int>(controllerName + "/keyboard/enable");
   enableKeyboardSrv.request.value = TIME_STEP;
   if (enableKeyboardClient.call(enableKeyboardSrv) && enableKeyboardSrv.response.success) {
     ros::Subscriber sub_keyboard;

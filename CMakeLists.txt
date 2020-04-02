@@ -169,10 +169,14 @@ include_directories(
 
 
 add_executable(robot src/robot.cpp)
-
+add_executable(keyboard_teleop src/keyboard_teleop.cpp)
 
 target_link_libraries(robot
 	${catkin_LIBRARIES}
+)
+
+target_link_libraries(keyboard_teleop
+    ${catkin_LIBRARIES}
 )
 
 
