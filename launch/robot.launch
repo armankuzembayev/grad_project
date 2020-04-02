@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find webots_ros)/maps/map.yaml">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find grad_project)/maps/map.yaml">
     <param name="frame_id" value="map"/>
   </node>
 

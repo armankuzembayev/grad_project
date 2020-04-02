@@ -27,8 +27,8 @@
 #include <tf/transform_broadcaster.h>
 #include "ros/ros.h"
 
-#include <webots_ros/set_float.h>
-#include <webots_ros/set_int.h>
+#include <grad_project/set_float.h>
+#include <grad_project/set_int.h>
 
 #define TIME_STEP 32
 #define NMOTORS 4
@@ -45,7 +45,7 @@ static int controllerCount;
 static std::vector<std::string> controllerList;
 
 ros::ServiceClient timeStepClient;
-webots_ros::set_int timeStepSrv;
+grad_project::set_int timeStepSrv;
 
 static const char *motorNames[NMOTORS] = {"front_left_wheel", "front_right_wheel", "back_left_wheel", "back_right_wheel"};
 
@@ -107,8 +107,8 @@ void updateSpeed() {
   speeds[3] = MAX_SPEED;
   for (int i = 0; i < NMOTORS; ++i) {
     ros::ServiceClient set_velocity_client;
-    webots_ros::set_float set_velocity_srv;
-    set_velocity_client = n->serviceClient<webots_ros::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
+    grad_project::set_float set_velocity_srv;
+    set_velocity_client = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
                                                                   std::string("/set_velocity"));
     set_velocity_srv.request.value = speeds[i];
     set_velocity_client.call(set_velocity_srv);
@@ -187,8 +187,8 @@ void setVelCallback(const geometry_msgs::Twist::ConstPtr &twist) {
 
   for (int i = 0; i < NMOTORS; ++i) {
     ros::ServiceClient set_velocity_client;
-    webots_ros::set_float set_velocity_srv;
-    set_velocity_client = n->serviceClient<webots_ros::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
+    grad_project::set_float set_velocity_srv;
+    set_velocity_client = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
                                                                   std::string("/set_velocity"));
     set_velocity_srv.request.value = speeds[i];
     set_velocity_client.call(set_velocity_srv);
@@ -219,7 +219,7 @@ int main(int argc, char **argv) {
   }
   ros::spinOnce();
 
-  timeStepClient = n->serviceClient<webots_ros::set_int>("pioneer3at/robot/time_step");
+  timeStepClient = n->serviceClient<grad_project::set_int>("pioneer3at/robot/time_step");
   timeStepSrv.request.value = TIME_STEP;
 
   // if there is more than one controller available, it let the user choose
@@ -244,8 +244,8 @@ int main(int argc, char **argv) {
   for (int i = 0; i < NMOTORS; ++i) {
     // position
     ros::ServiceClient set_position_client;
-    webots_ros::set_float set_position_srv;
-    set_position_client = n->serviceClient<webots_ros::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
+    grad_project::set_float set_position_srv;
+    set_position_client = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
                                                                   std::string("/set_position"));
 
     set_position_srv.request.value = INFINITY;
@@ -256,8 +256,8 @@ int main(int argc, char **argv) {
 
     // speed
     ros::ServiceClient set_velocity_client;
-    webots_ros::set_float set_velocity_srv;
-    set_velocity_client = n->serviceClient<webots_ros::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
+    grad_project::set_float set_velocity_srv;
+    set_velocity_client = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
                                                                   std::string("/set_velocity"));
 
     set_velocity_srv.request.value = 0.0;
@@ -270,10 +270,10 @@ int main(int argc, char **argv) {
 
   // enable lidar
   ros::ServiceClient set_lidar_client;
-  webots_ros::set_int lidar_srv;
+  grad_project::set_int lidar_srv;
   ros::Subscriber sub_lidar_scan;
 
-  set_lidar_client = n->serviceClient<webots_ros::set_int>("pioneer3at/Sick_LMS_291/enable");
+  set_lidar_client = n->serviceClient<grad_project::set_int>("pioneer3at/Sick_LMS_291/enable");
   lidar_srv.request.value = TIME_STEP;
   if (set_lidar_client.call(lidar_srv) && lidar_srv.response.success) {
     ROS_INFO("Lidar enabled.");
@@ -291,9 +291,9 @@ int main(int argc, char **argv) {
 
   // enable gps
   ros::ServiceClient set_GPS_client;
-  webots_ros::set_int GPS_srv;
+  grad_project::set_int GPS_srv;
   ros::Subscriber sub_GPS;
-  set_GPS_client = n->serviceClient<webots_ros::set_int>("pioneer3at/gps/enable");
+  set_GPS_client = n->serviceClient<grad_project::set_int>("pioneer3at/gps/enable");
   GPS_srv.request.value = 32;
   if (set_GPS_client.call(GPS_srv) && GPS_srv.response.success) {
     sub_GPS = n->subscribe("pioneer3at/gps/values", 1, GPSCallback);
@@ -309,9 +309,9 @@ int main(int argc, char **argv) {
 
   // enable inertial unit
   ros::ServiceClient set_inertial_unit_client;
-  webots_ros::set_int inertial_unit_srv;
+  grad_project::set_int inertial_unit_srv;
   ros::Subscriber sub_inertial_unit;
-  set_inertial_unit_client = n->serviceClient<webots_ros::set_int>("pioneer3at/inertial_unit/enable");
+  set_inertial_unit_client = n->serviceClient<grad_project::set_int>("pioneer3at/inertial_unit/enable");
   inertial_unit_srv.request.value = 32;
   if (set_inertial_unit_client.call(inertial_unit_srv) && inertial_unit_srv.response.success) {
     sub_inertial_unit = n->subscribe("pioneer3at/inertial_unit/roll_pitch_yaw", 1, inertialUnitCallback);
@@ -327,23 +327,23 @@ int main(int argc, char **argv) {
 
   // enable accelerometer
   ros::ServiceClient set_accelerometer_client;
-  webots_ros::set_int accelerometer_srv;
+  grad_project::set_int accelerometer_srv;
   ros::Subscriber sub_accelerometer;
-  set_accelerometer_client = n->serviceClient<webots_ros::set_int>("pioneer3at/accelerometer/enable");
+  set_accelerometer_client = n->serviceClient<grad_project::set_int>("pioneer3at/accelerometer/enable");
   accelerometer_srv.request.value = 32;
   set_accelerometer_client.call(accelerometer_srv);
   // enable camera
   ros::ServiceClient set_camera_client;
-  webots_ros::set_int camera_srv;
+  grad_project::set_int camera_srv;
   ros::Subscriber sub_camera;
-  set_camera_client = n->serviceClient<webots_ros::set_int>("pioneer3at/camera/enable");
+  set_camera_client = n->serviceClient<grad_project::set_int>("pioneer3at/camera/enable");
   camera_srv.request.value = 64;
   set_camera_client.call(camera_srv);
   // enable gyro
   ros::ServiceClient set_gyro_client;
-  webots_ros::set_int gyro_srv;
+  grad_project::set_int gyro_srv;
   ros::Subscriber sub_gyro;
-  set_gyro_client = n->serviceClient<webots_ros::set_int>("pioneer3at/gyro/enable");
+  set_gyro_client = n->serviceClient<grad_project::set_int>("pioneer3at/gyro/enable");
   gyro_srv.request.value = 32;
   set_gyro_client.call(gyro_srv);
 
