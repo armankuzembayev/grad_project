@@ -167,80 +167,8 @@ include_directories(
 )
 
 
-## Instructions for keyboard_teleop node
-
-add_executable(keyboard_teleop src/keyboard_teleop.cpp)
-
-add_dependencies(keyboard_teleop webots_ros_generate_messages_cpp)
-
-target_link_libraries(keyboard_teleop
-	${catkin_LIBRARIES}
-)
-
-
-#instructions for e_puck_line client
-
-add_executable(e_puck_line src/e_puck_line.cpp)
-
-add_dependencies(e_puck_line webots_ros_generate_messages_cpp)
-
-target_link_libraries(e_puck_line
-	${catkin_LIBRARIES}
-)
-
-#instructions for complete_test client
-
-add_executable(complete_test src/complete_test.cpp)
-
-add_dependencies(complete_test webots_ros_generate_messages_cpp)
-
-target_link_libraries(complete_test
-	${catkin_LIBRARIES}
-)
-
-#instructions for robot_information_parser node
-
-add_executable(robot_information_parser src/robot_information_parser.cpp)
-
-add_dependencies(robot_information_parser webots_ros_generate_messages_cpp)
-
-target_link_libraries(robot_information_parser
-	${catkin_LIBRARIES}
-)
-
-#instructions for catch_the_bird node
-
-add_executable(catch_the_bird src/catch_the_bird.cpp)
-
-add_dependencies(catch_the_bird webots_ros_generate_messages_cpp)
-
-target_link_libraries(catch_the_bird
-	${catkin_LIBRARIES}
-)
-
-#instructions for panoramic_view_recorder node
-
-add_executable(panoramic_view_recorder src/panoramic_view_recorder.cpp)
-
-add_dependencies(panoramic_view_recorder webots_ros_generate_messages_cpp)
-
-target_link_libraries(panoramic_view_recorder
-	${catkin_LIBRARIES}
-)
-
-#instructions for pioneer3at node
-
-add_executable(pioneer3at src/pioneer3at.cpp)
-
-add_dependencies(pioneer3at webots_ros_generate_messages_cpp)
-
-target_link_libraries(pioneer3at
-	${catkin_LIBRARIES}
-)
 
 add_executable(robot src/robot.cpp)
-
-add_dependencies(robot webots_ros_generate_messages_cpp)
 
 
 target_link_libraries(robot
@@ -252,29 +180,4 @@ target_link_libraries(robot
 ## Install ##
 #############
 
-install(TARGETS keyboard_teleop
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-install(TARGETS e_puck_line
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(TARGETS complete_test
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(TARGETS robot_information_parser
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(TARGETS catch_the_bird
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(TARGETS panoramic_view_recorder
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(TARGETS pioneer3at
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(PROGRAMS src/webots_launcher.py
-        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(DIRECTORY launch
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
