@@ -3,7 +3,7 @@
 import rospy
 import math
 from geometry_msgs.msg import Twist
-from webots_ros.srv import *
+from grad_project.srv import *
 
 
 
