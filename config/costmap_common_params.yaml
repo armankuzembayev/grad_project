@@ -1,0 +1,8 @@
+obstacle_range: 4
+raytrace_range: 5
+footprint: [ [-0.2535, 0.2485], [0.2535, 0.2485], [0.2535,-0.2485], [-0.2535,-0.2485]]
+inflation_radius: 1.0
+cost_scaling_factor: 2.5
+observation_sources: laser_scan_sensor
+laser_scan_sensor: {sensor_frame: pioneer3at/Sick_LMS_291, observation_persistence: 0.0, data_type: LaserScan, topic: pioneer3at/Sick_LMS_291/laser_scan/layer0 , marking: true, clearing: true}
+

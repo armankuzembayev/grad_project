@@ -166,12 +166,17 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-
-
 add_executable(robot src/robot.cpp)
 
-
 target_link_libraries(robot
+	${catkin_LIBRARIES}
+)
+
+
+#
+add_executable(odometry_publisher src/odometry.cpp)
+
+target_link_libraries(odometry_publisher
 	${catkin_LIBRARIES}
 )
 

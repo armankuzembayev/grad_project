@@ -22,6 +22,7 @@
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <geometry_msgs/Twist.h>
+#include <nav_msgs/Odometry.h>
 #include <signal.h>
 #include <std_msgs/String.h>
 #include <tf/transform_broadcaster.h>
@@ -59,61 +60,14 @@ static double rangeThreshold = 0.0;
 static std::vector<double> braitenbergCoefficients;
 static bool areBraitenbergCoefficientsinitialized = false;
 
+ros::Publisher odom_pub;
+
 // gaussian function
 double gaussian(double x, double mu, double sigma) {
   return (1.0 / (sigma * sqrt(2.0 * M_PI))) * exp(-((x - mu) * (x - mu)) / (2 * sigma * sigma));
 }
 
-void updateSpeed() {
-  // init dynamic variables
-  
-//  double leftObstacle = 0.0, rightObstacle = 0.0, obstacle = 0.0;
-  double speeds[NMOTORS];
-  // apply the braitenberg coefficients on the resulted values of the lms291
-  // near obstacle sensed on the left side
 
-/*
-  for (int i = 0; i < halfResolution; ++i) {
-    if (lidarValues[i] < rangeThreshold)  // far obstacles are ignored
-      leftObstacle += braitenbergCoefficients[i] * (1.0 - lidarValues[i] / maxRange);
-    // near obstacle sensed on the right side
-    int j = lms291Resolution - i - 1;
-    if (lidarValues[j] < rangeThreshold)
-      rightObstacle += braitenbergCoefficients[i] * (1.0 - lidarValues[j] / maxRange);
-  }
-  // overall front obstacle
-  obstacle = leftObstacle + rightObstacle;
-  // compute the speed according to the information on
-  // obstacles
-  if (obstacle > OBSTACLE_THRESHOLD) {
-    const double speedFactor = (1.0 - DECREASE_FACTOR * obstacle) * MAX_SPEED / obstacle;
-    speeds[0] = speedFactor * leftObstacle;
-    speeds[1] = speedFactor * rightObstacle;
-    speeds[2] = BACK_SLOWDOWN * speeds[0];
-    speeds[3] = BACK_SLOWDOWN * speeds[1];
-  } else {
-    speeds[0] = MAX_SPEED;
-    speeds[1] = MAX_SPEED;
-    speeds[2] = MAX_SPEED;
-    speeds[3] = MAX_SPEED;
-  }
-
-*/
-  // set speeds
-
-  speeds[0] = MAX_SPEED;
-  speeds[1] = MAX_SPEED;
-  speeds[2] = MAX_SPEED;
-  speeds[3] = MAX_SPEED;
-  for (int i = 0; i < NMOTORS; ++i) {
-    ros::ServiceClient set_velocity_client;
-    grad_project::set_float set_velocity_srv;
-    set_velocity_client = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
-                                                                  std::string("/set_velocity"));
-    set_velocity_srv.request.value = speeds[i];
-    set_velocity_client.call(set_velocity_srv);
-  }
-}
 
 void broadcastTransform() {
   static tf::TransformBroadcaster br;
@@ -123,8 +77,28 @@ void broadcastTransform() {
   q = q.inverse();
   transform.setRotation(q);
   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
+  //br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom_combined", "base_link"));
   transform.setIdentity();
   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "pioneer3at/Sick_LMS_291"));
+
+  
+  nav_msgs::Odometry odom;
+  odom.header.stamp = ros::Time::now();
+  odom.header.frame_id = "odom_temp";
+
+  //set the position
+  odom.pose.pose.position.x = GPSValues[2] * (-1);
+  odom.pose.pose.position.y = GPSValues[0]; 
+  odom.pose.pose.position.z = GPSValues[1];
+  odom.pose.pose.orientation.x = inertialUnitValues[0];
+  odom.pose.pose.orientation.y = inertialUnitValues[1];
+  odom.pose.pose.orientation.z = inertialUnitValues[2] * (-1);
+  odom.pose.pose.orientation.w = inertialUnitValues[3];
+
+  //set the velocity
+  
+  odom_pub.publish(odom);
+
 }
 
 void GPSCallback(const sensor_msgs::NavSatFix::ConstPtr &values) {
@@ -159,7 +133,6 @@ void lidarCallback(const sensor_msgs::LaserScan::ConstPtr &scan) {
     areBraitenbergCoefficientsinitialized = true;
   }
 
-  //updateSpeed();
 }
 
 // catch names of the controllers availables on ROS network
@@ -176,28 +149,6 @@ void quit(int sig) {
   ros::shutdown();
   exit(0);
 }
-
-/*
-void setVelCallback(const geometry_msgs::Twist::ConstPtr &twist) {
-  double speeds[NMOTORS];    
-  speeds[0] = 0.0;
-  speeds[1] = 0.0;
-  speeds[2] = 0.0;
-  speeds[3] = 0.0;
-
-  for (int i = 0; i < NMOTORS; ++i) {
-    ros::ServiceClient set_velocity_client;
-    grad_project::set_float set_velocity_srv;
-    set_velocity_client = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
-                                                                  std::string("/set_velocity"));
-    set_velocity_srv.request.value = speeds[i];
-    set_velocity_client.call(set_velocity_srv);
-  }
-
-
-}
-*/
-
 
 
 
@@ -218,7 +169,8 @@ int main(int argc, char **argv) {
     ros::spinOnce();
   }
   ros::spinOnce();
-
+  
+  odom_pub = n->advertise<nav_msgs::Odometry>("/odom_temp", 1);
   timeStepClient = n->serviceClient<grad_project::set_int>("pioneer3at/robot/time_step");
   timeStepSrv.request.value = TIME_STEP;
 
@@ -296,6 +248,7 @@ int main(int argc, char **argv) {
   set_GPS_client = n->serviceClient<grad_project::set_int>("pioneer3at/gps/enable");
   GPS_srv.request.value = 32;
   if (set_GPS_client.call(GPS_srv) && GPS_srv.response.success) {
+    
     sub_GPS = n->subscribe("pioneer3at/gps/values", 1, GPSCallback);
     while (sub_GPS.getNumPublishers() == 0) {
     }

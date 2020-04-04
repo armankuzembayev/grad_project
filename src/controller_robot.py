@@ -3,12 +3,12 @@
 import rospy
 import math
 from geometry_msgs.msg import Twist
-from webots_ros.srv import *
+from grad_project.srv import *
 
 
 
 class Controller:
-    def __init__(self, ):
+    def __init__(self):
         self.sub = rospy.Subscriber('cmd_vel', Twist, self.callback)
         self.width = 0.381
         self.wheel_radius = 0.111
@@ -22,10 +22,10 @@ class Controller:
         ang_vel_z = twist.angular.z 
         self.v_l = (lin_vel_x - 0.5 * self.width * ang_vel_z) / self.wheel_radius
         self.v_r = (lin_vel_x + 0.5 * self.width * ang_vel_z) / self.wheel_radius
-        self.motors[0] = self.v_l
-        self.motors[1] = self.v_r
-        self.motors[2] = self.v_l
-        self.motors[3] = self.v_r
+        self.motors[0] = self.v_r
+        self.motors[1] = self.v_l
+        self.motors[2] = self.v_r
+        self.motors[3] = self.v_l
         for motor in range(4):
             set_velocity = rospy.ServiceProxy('pioneer3at/' + str(self.motorNames[motor]) + '/set_velocity', set_float);
             set_velocity_srv = set_velocity(self.motors[motor])

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- Webots launch -->
+  <arg name="no-gui" default="false," doc="Start Webots with minimal GUI"/>
+  <include file="$(find grad_project)/launch/webots.launch">
+    <arg name="mode" value="realtime"/>
+    <arg name="no-gui" value="$(arg no-gui)"/>
+    <arg name="world" value="$(find grad_project)/worlds/labirint.wbt"/>
+  </include>
+
+  <!-- Robot executable -->
+  <node name="robot" pkg="grad_project" type="robot"></node>
+
+  <!-- Maps or whatever -->
+  <include file="$(find grad_project)/launch/robot.launch">
+  </include>
+
+
+  <!-- Keyboard controller -->
+  <node name="controller_robot" pkg="grad_project" type="controller_robot.py"></node>
+
+  <!-- Odometry -->
+  <node name="odometry_publisher" pkg="grad_project" type="odometry_publisher"></node>
+
+  <!-- RVIZ -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find grad_project)/rviz/rviz.rviz"></node> 
+
+</launch>
