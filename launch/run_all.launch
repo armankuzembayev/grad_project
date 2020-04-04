@@ -16,17 +16,12 @@
   <include file="$(find grad_project)/launch/robot.launch">
   </include>
 
-<<<<<<< HEAD
-=======
-  <!-- AMCL -->
-  <include file="$(find grad_project)/launch/amcl.launch">
-  </include>  
->>>>>>> 8a70df3a7ec3578330fbc2f0caf35e784fc0e725
+
 
   <!-- Keyboard controller -->
   <node name="controller_robot" pkg="grad_project" type="controller_robot.py"></node>
 
-<<<<<<< HEAD
+
   <!-- Odometry -->
   <node name="odometry_publisher" pkg="grad_project" type="odometry_publisher"></node>
 
@@ -40,4 +35,3 @@
 
 </launch>
 
->>>>>>> 8a70df3a7ec3578330fbc2f0caf35e784fc0e725
