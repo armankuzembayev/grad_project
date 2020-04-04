@@ -16,22 +16,14 @@
   <include file="$(find grad_project)/launch/robot.launch">
   </include>
 
-
-
   <!-- Keyboard controller -->
   <node name="controller_robot" pkg="grad_project" type="controller_robot.py"></node>
-
 
   <!-- Odometry -->
   <node name="odometry_publisher" pkg="grad_project" type="odometry_publisher"></node>
 
   <!-- RVIZ -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find grad_project)/rviz/rviz.rviz"></node> 
-
-</launch>
-=======
-  <!-- RVIZ -->
-<node type="rviz" name="rviz" pkg="rviz" args="-d $(find grad_project)/rviz/rviz.rviz"></node> 
 
 </launch>
 
