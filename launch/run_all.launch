@@ -23,7 +23,7 @@
   <node name="odometry_publisher" pkg="grad_project" type="odometry_publisher"></node>
 
   <!-- RVIZ -->
-  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find grad_project)/rviz/rviz.rviz"></node> 
+  <!--<node type="rviz" name="rviz" pkg="rviz" args="-d $(find grad_project)/rviz/rviz.rviz"></node> -->
 
 </launch>
 
