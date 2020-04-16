@@ -70,6 +70,7 @@
     <rosparam file="$(find grad_project)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find grad_project)/config/global_costmap_params.yaml" command="load" /> 
     <rosparam file="$(find grad_project)/config/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find grad_project)/config/base_global_planner_params.yaml" command="load" />
   </node> 
 
 </launch>

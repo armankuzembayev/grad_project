@@ -10,7 +10,8 @@ from grad_project.srv import *
 class Controller:
     def __init__(self):
         self.sub = rospy.Subscriber('cmd_vel', Twist, self.callback)
-        self.width = 0.381
+        self.width = 0.381 * 0.5
+	self.s = 0.134
         self.wheel_radius = 0.111
         self.v_l = 0.0
         self.v_r = 0.0
@@ -20,8 +21,8 @@ class Controller:
     def callback(self, twist):   
         lin_vel_x = twist.linear.x
         ang_vel_z = twist.angular.z 
-        self.v_l = (lin_vel_x - 0.5 * self.width * ang_vel_z) / self.wheel_radius
-        self.v_r = (lin_vel_x + 0.5 * self.width * ang_vel_z) / self.wheel_radius
+        self.v_l = (lin_vel_x - math.sqrt(self.s**2 + self.width**2) * ang_vel_z) / self.wheel_radius
+        self.v_r = (lin_vel_x + math.sqrt(self.s**2 + self.width**2) * ang_vel_z) / self.wheel_radius
         self.motors[0] = self.v_r
         self.motors[1] = self.v_l
         self.motors[2] = self.v_r

@@ -1,10 +1,12 @@
 local_costmap:
-  global_frame: /map
-  robot_base_frame: /base_link
-  update_frequency: 10.0
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 5.0
   publish_frequency: 5.0
   static_map: false
   rolling_window: true
   width: 15.0
   height: 15.0
-  resolution: 0.2
+  resolution: 0.1
+  transform_tolerance: 1.0
+  map_type: costmap
