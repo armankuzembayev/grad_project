@@ -188,12 +188,22 @@ int main(int argc, char **argv) {
       return 1;
     }
   }
+  std::cout << "Controller: " << controllerName.c_str() << std::endl;
   ROS_INFO("Using controller: '%s'", controllerName.c_str());
   // leave topic once it is not necessary anymore
   nameSub.shutdown();
 
   // init motors
   for (int i = 0; i < NMOTORS; ++i) {
+      //Test max acceleration
+    ros::ServiceClient set_inertial_unit_client2;
+    grad_project::set_float inertial_unit_srv2;
+    ros::Subscriber sub_inertial_unit2;
+    set_inertial_unit_client2 = n->serviceClient<grad_project::set_float>(std::string("pioneer3at/") + std::string(motorNames[i]) +
+                                                                  std::string("/set_acceleration"));
+    inertial_unit_srv2.request.value = 12.0f;
+    set_inertial_unit_client2.call(inertial_unit_srv2);
+
     // position
     ros::ServiceClient set_position_client;
     grad_project::set_float set_position_srv;
