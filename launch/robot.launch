@@ -6,7 +6,7 @@
   <arg name="global_frame_id" default="map"/>
 
   <arg name="base_global_planner" default="global_planner/GlobalPlanner" />
-  <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS" />
+  <arg name="base_local_planner" default="teb_local_planner/TebLocalPlannerROS" />
 
   <node name="map_server" pkg="map_server" type="map_server" args="$(find grad_project)/maps/map.yaml">
     <param name="frame_id" value="map"/>

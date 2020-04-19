@@ -21,8 +21,8 @@ class Controller:
     def callback(self, twist):   
         lin_vel_x = twist.linear.x
         ang_vel_z = twist.angular.z 
-        self.v_l = (lin_vel_x - math.sqrt(self.s**2 + self.width**2) * ang_vel_z) / self.wheel_radius
-        self.v_r = (lin_vel_x + math.sqrt(self.s**2 + self.width**2) * ang_vel_z) / self.wheel_radius
+        self.v_l = (lin_vel_x - math.sqrt(self.s**2 + self.width**2) * ang_vel_z / math.cos(math.atan(self.s / self.width))) / self.wheel_radius
+        self.v_r = (lin_vel_x + math.sqrt(self.s**2 + self.width**2) * ang_vel_z / math.cos(math.atan(self.s / self.width))) / self.wheel_radius
         self.motors[0] = self.v_r
         self.motors[1] = self.v_l
         self.motors[2] = self.v_r
