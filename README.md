@@ -18,14 +18,9 @@ source devel/setup.bash
 ```
 
 ### Usage
-In other terminal window:
+
+In terminal window:
 ```
-webots
-```
-In webots choose the world from worlds/labirint.wbt
-In other terminal window:
-```
-source devel/setup.bash
 roslaunch grad_project run_all.launch
 ```
 
